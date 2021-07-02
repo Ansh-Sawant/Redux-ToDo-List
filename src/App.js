@@ -1,25 +1,52 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
+import { addTodo, deleteTodo, removeTodo } from "./actions/index";
+import { useSelector, useDispatch } from "react-redux";
 
-function App() {
+const App = () => {
+  const [inputData, setInputData] = useState("");
+  const list = useSelector((state) => state.todoReducer.list);
+  const dispatch = useDispatch();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <div>
+        <figure>
+          <figcaption>Add Your List Here</figcaption>
+        </figure>
+
+        <div style={{ margin: "30px" }}>
+          <div>
+            <input
+              type="text"
+              placeholder="✍️ Add Items .. "
+              value={inputData}
+              onChange={(event) => setInputData(event.target.value)}
+            />
+            <i
+              className="fa fa-plus add-btn"
+              onClick={() => dispatch(addTodo(inputData), setInputData(""))}
+            ></i>
+          </div>
+
+          {list.map((elem) => {
+            return (
+              <div className="notes" key={elem.id}>
+                <h3>{elem.data}</h3>
+                <i
+                  className="far fa-trash-alt add-btn"
+                  title="delete item"
+                  onClick={() => dispatch(deleteTodo(elem.id))}
+                ></i>
+              </div>
+            );
+          })}
+
+          <button onClick={() => dispatch(removeTodo())}>Check List</button>
+        </div>
+      </div>
+    </>
   );
-}
+};
 
 export default App;
